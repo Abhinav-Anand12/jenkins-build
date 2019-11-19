@@ -16,7 +16,7 @@ pipeline {
             }
         }
 
-    stage('Container Deploy') {
+        stage('Container Deploy') {
             steps {
                 script {
                     if ((ci_branches.contains(env.BRANCH_NAME)) {

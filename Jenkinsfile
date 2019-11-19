@@ -8,7 +8,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 script {
-                    if (ci_branches.contains(env.BRANCH_NAME) {
+                    if (ci_branches.contains(env.BRANCH_NAME)) {
                         checkout scm
                     }
 
@@ -35,3 +35,4 @@ pipeline {
 //         }
     }
 }
+

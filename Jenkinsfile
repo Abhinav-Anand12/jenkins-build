@@ -1,12 +1,13 @@
 def ci_branches = ['master']
-// def build_host_address = 'tcp://172.17.0.1:12375'
+def build_host_address = 'tcp://192.168.99.102:2376'
 
 pipeline {
-    agent {
-       node {
-              label 'dockjenk'
-       }
-    }
+//     agent {
+//        node {
+//               label 'dockjenk'
+//        }
+//     }
+    agent any
     stages {
         stage('Checkout') {
             steps {

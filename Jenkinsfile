@@ -16,7 +16,7 @@ pipeline {
             }
         }
 
-        stage('Container Deploy') {
+        stage('Build') {
             steps {
                 script {
                     if (ci_branches.contains(env.BRANCH_NAME)) {
@@ -25,14 +25,10 @@ pipeline {
                             if(requirements_file_result.contains("requirements.txt")) {
                                 docker.script.sh(script: "docker exec -i app pip install -U -r /app/requirements.txt" )
                             }
-//                             docker.script.sh(script: "docker cp $env.WORKSPACE/. app-production:/app")
-//                             docker.script.sh(script: "docker exec -i app-production bash -c 'chown -R root:root /app'")
-//                             docker.script.sh(script: "docker restart app-production")
+//                                docker.script.sh(script: "docker cp $env.WORKSPACE/. app-production:/app")
+//                                docker.script.sh(script: "docker exec -i app-production bash -c 'chown -R root:root /app'")
+//                                docker.script.sh(script: "docker restart app-production")
 
-                               docker.script.sh(script: "docker cp $env.WORKSPACE/. app-production:/app")
-                               docker.script.sh(script: "docker exec -i app-production bash -c 'chown -R root:root /app'")
-                               docker.script.sh(script: "docker restart app-production")
-                        }
                         }
                     }
                 }

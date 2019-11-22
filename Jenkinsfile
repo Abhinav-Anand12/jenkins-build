@@ -18,7 +18,7 @@ pipeline {
          stage('Update SubModules') {
             steps {
                 script {
-                    sh "git submodule update --init --recursive && git submodule foreach git checkout sprint && git submodule foreach git pull"
+                    sh "git submodule update --init --recursive && git submodule foreach git checkout master && git submodule foreach git pull"
                 }
             }
         }

@@ -36,9 +36,9 @@ pipeline {
 //                                 def image = docker.build("abhinav12/myrepo:${env.BRANCH_NAME}")
 //                                 image.push()
 //                             }
-                        sh "ls -l"
 
-                        }
+
+//                        }
                     }
                 }
             }

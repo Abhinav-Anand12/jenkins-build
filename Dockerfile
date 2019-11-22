@@ -8,7 +8,4 @@ COPY ./app /app
 
 VOLUME ["/dockjenk"]
 
-#ENV PYTHONPATH=/app
-#
-#EXPOSE 80
 

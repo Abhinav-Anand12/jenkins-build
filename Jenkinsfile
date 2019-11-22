@@ -1,5 +1,5 @@
 def ci_branches = ['master','abhinav']
-def build_host_address = 'tcp://127.0.0.1:2376'
+def build_host_address = '/Users/user1/.jenkins/workspace/'
 
 pipeline {
     agent any
@@ -22,6 +22,7 @@ pipeline {
                     // and the branch host ip address is present in build_docker_hosts.
                     if (ci_branches.contains(env.BRANCH_NAME)) {
                         withDockerServer([uri:build_host_address]) {
+                               sh "ls -l"
 //                             docker.script.sh(script: "docker push abhinav12/myrepo:${env.BRANCH_NAME}")
                             withDockerRegistry([credentialsId: 'abhinav12']) {
                                 def image = docker.build("abhinav12/myrepo:${env.BRANCH_NAME}")

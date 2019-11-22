@@ -3,7 +3,6 @@ def build_host_address = 'tcp://127.0.0.1:2376'
 
 pipeline {
     agent any
-    
     stages {
         stage('Checkout') {
             steps {
@@ -23,12 +22,8 @@ pipeline {
                     // and the branch host ip address is present in build_docker_hosts.
                     if (ci_branches.contains(env.BRANCH_NAME)) {
                         withDockerServer([uri:build_host_address]) {
-                            def info(script,msg){
-                                LOGGER.info("${msg}")
-                                script.echo "[INFO] ${msg}"
-                            }
-                            out.info(this,"SOME VERY USEFUL INFORMATION")
-                            withDockerRegistry([credentialsId: 'abhinav12', url: "abhinav12/myrepo"]) {
+//                             docker.script.sh(script: "docker push abhinav12/myrepo:${env.BRANCH_NAME}")
+                            withDockerRegistry([credentialsId: 'abhinav12']) {
                                 def image = docker.build("abhinav12/myrepo:${env.BRANCH_NAME}")
                                 image.push()
                             }

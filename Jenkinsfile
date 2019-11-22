@@ -1,5 +1,5 @@
-def ci_branches = ['master']
-def build_host_address = 'tcp://192.168.99.102:2376'
+def ci_branches = ['master','abhinav']
+def build_host_address = 'tcp://127.0.0.1:2376'
 
 pipeline {
     agent any
@@ -23,8 +23,8 @@ pipeline {
                     // and the branch host ip address is present in build_docker_hosts.
                     if (ci_branches.contains(env.BRANCH_NAME)) {
                         withDockerServer([uri:build_host_address]) {
-                            withDockerRegistry([credentialsId: 'abhinav12', url: "https://index.docker.io/v1/"]) {
-                                def image = docker.build("https://index.docker.io/v1/:${env.BRANCH_NAME}")
+                            withDockerRegistry([credentialsId: 'abhinav12', uri: "abhinav12/myrepo" ) {
+                                def image = docker.build("abhinav12/myrepo:${env.BRANCH_NAME}")
                                 image.push()
                             }
                         }

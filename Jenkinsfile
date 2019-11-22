@@ -15,19 +15,29 @@ pipeline {
             }
         }
 
+         stage('Update SubModules') {
+            steps {
+                script {
+                    sh "git submodule update --init --recursive && git submodule foreach git checkout sprint && git submodule foreach git pull"
+                }
+            }
+        }
+
         stage('Docker Build') {
             steps {
                 script {
                     // Build the docker image if and only if the branch name is present in ci_branches
                     // and the branch host ip address is present in build_docker_hosts.
                     if (ci_branches.contains(env.BRANCH_NAME)) {
-                        withDockerServer([uri:build_host_address]) {
-                               sh "ls -l"
-//                             docker.script.sh(script: "docker push abhinav12/myrepo:${env.BRANCH_NAME}")
-                            withDockerRegistry([credentialsId: 'abhinav12']) {
-                                def image = docker.build("abhinav12/myrepo:${env.BRANCH_NAME}")
-                                image.push()
-                            }
+//                         withDockerServer([uri:build_host_address]) {
+//                                sh "ls -l"
+// //                             docker.script.sh(script: "docker push abhinav12/myrepo:${env.BRANCH_NAME}")
+//                             withDockerRegistry([credentialsId: 'abhinav12']) {
+//                                 def image = docker.build("abhinav12/myrepo:${env.BRANCH_NAME}")
+//                                 image.push()
+//                             }
+                        sh "ls -l"
+
                         }
                     }
                 }

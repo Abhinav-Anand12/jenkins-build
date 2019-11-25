@@ -50,6 +50,8 @@ pipeline {
                     withDockerServer([uri:build_host_address]) {
                         sh "ls -la"
                         def image = docker.build("mynewimage")
+                        image.push()
+
 //                         docker.script.sh(script: "sudo docker build -t mynewimage .")
                     }
 

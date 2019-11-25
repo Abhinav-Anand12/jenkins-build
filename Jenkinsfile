@@ -32,7 +32,6 @@ pipeline {
                         docker.script.sh(script: "docker build -t abhinav12/myrepo:${env.BRANCH_NAME} .")
                         docker.script.sh(script: "docker push abhinav12/myrepo:${env.BRANCH_NAME}")
                     }
-
 //                         withDockerServer([uri:build_host_address]) {
 //                                sh "ls -l"
 // //                             docker.script.sh(script: "docker push abhinav12/myrepo:${env.BRANCH_NAME}")
@@ -40,10 +39,7 @@ pipeline {
 //                                 def image = docker.build("abhinav12/myrepo:${env.BRANCH_NAME}")
 //                                 image.push()
 //                             }
-
-
 //                        }
-                    }
                 }
             }
         }

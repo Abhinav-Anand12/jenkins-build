@@ -49,7 +49,7 @@ pipeline {
                     // and the branch host ip address is present in build_docker_hosts.
                     withDockerServer([uri:build_host_address]) {
                           withDockerRegistry([credentialsId: 'abhinav12']) {
-                                def image = docker.build("abhinav12/rzr:abhi4")
+                                def image = docker.build("abhinav12/myrepo:abhi4")
                                 image.push()
                           }
 

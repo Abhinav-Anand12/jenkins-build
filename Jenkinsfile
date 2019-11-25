@@ -28,8 +28,8 @@ pipeline {
                 script {
                     // Build the docker image if and only if the branch name is present in ci_branches
                     // and the branch host ip address is present in build_docker_hosts.
-                    if (ci_branches.contains("master")) {
-                        docker.script.sh(script: "docker container ls -la")
+                    withDockerServer([uri:build_host_address]) {
+                        docker.script.sh(script: "docker images")
                     }
 //                         withDockerServer([uri:build_host_address]) {
 //                                sh "ls -l"

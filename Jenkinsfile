@@ -48,7 +48,7 @@ pipeline {
                     // Build the docker image if and only if the branch name is present in ci_branches
                     // and the branch host ip address is present in build_docker_hosts.
                     withDockerServer([uri:build_host_address]) {
-                          withDockerRegistry([credentialsId: 'abhinav12']) {
+                          withDockerRegistry([credentialsId: 'abhinav12', url: "https://index.docker.io/abhinav12/myrepo"]) {
                                 def image = docker.build("abhinav12/myrepo:abhi4")
                                 image.push()
                           }

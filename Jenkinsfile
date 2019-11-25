@@ -23,24 +23,24 @@ pipeline {
                 }
             }
         }
-
-         stage('Build') {
-            steps {
-                script {
-
-                        // Check if there are any changes to the package.json file and run the npm commands
-                        def json_package_result = sh(returnStdout: true,script: 'git diff-tree --name-only $GIT_PREVIOUS_COMMIT $GIT_COMMIT')
-                        // This if condition will check whether the json_package_result contain's package.json
-                        // and if the branch is built for the first time.
-                        // Also check for node_modules and hs-srvcommon/node_modules files
-                        if(json_package_result.contains("package.json") || json_package_result.contains("hs-srvcommon") || ! fileExists(file:"node_modules") || ! fileExists(file:"hs-srvcommon/node_modules")) {
-                                sh "npm install"
-                                sh "cd hs-srvcommon && npm install"
-
-                    }
-                }
-            }
-        }
+//
+//          stage('Build') {
+//             steps {
+//                 script {
+//
+//                         // Check if there are any changes to the package.json file and run the npm commands
+//                         def json_package_result = sh(returnStdout: true,script: 'git diff-tree --name-only $GIT_PREVIOUS_COMMIT $GIT_COMMIT')
+//                         // This if condition will check whether the json_package_result contain's package.json
+//                         // and if the branch is built for the first time.
+//                         // Also check for node_modules and hs-srvcommon/node_modules files
+//                         if(json_package_result.contains("package.json") || json_package_result.contains("hs-srvcommon") || ! fileExists(file:"node_modules") || ! fileExists(file:"hs-srvcommon/node_modules")) {
+//                                 sh "npm install"
+//                                 sh "cd hs-srvcommon && npm install"
+//
+//                     }
+//                 }
+//             }
+//         }
 
         stage('Docker Build') {
             steps {
@@ -48,7 +48,10 @@ pipeline {
                     // Build the docker image if and only if the branch name is present in ci_branches
                     // and the branch host ip address is present in build_docker_hosts.
                     withDockerServer([uri:build_host_address]) {
-                        docker.script.sh(script: "ls -la")
+                          withDockerRegistry([credentialsId: 'abhinav12']) {
+                                def image = docker.build("abhinav12/rzr:abhi4")
+                                image.push()
+                          }
 
                     }
 //                         withDockerServer([uri:build_host_address]) {

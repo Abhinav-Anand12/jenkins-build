@@ -8,9 +8,9 @@ pipeline {
         stage('Checkout') {
             steps {
                 script {
-                    if (ci_branches.contains("master")) {
+//                     if (ci_branches.contains("master")) {
                         checkout scm
-                    }
+//                     }
 
                 }
             }

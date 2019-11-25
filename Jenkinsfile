@@ -28,7 +28,7 @@ pipeline {
                 script {
                     // Build the docker image if and only if the branch name is present in ci_branches
                     // and the branch host ip address is present in build_docker_hosts.
-                    if (ci_branches.contains("master")) {
+                    if (ci_branches.contains(env.BRANCH_NAME)) {
                         docker.script.sh(script: "docker images ")
 
                     }

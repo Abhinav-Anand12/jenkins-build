@@ -49,7 +49,7 @@ pipeline {
                     // and the branch host ip address is present in build_docker_hosts.
                     withDockerServer([uri:build_host_address]) {
                         sh "ls -la"
-                        sh "docker build -t mynewimage ."
+                        sh "sudo docker build -t mynewimage ."
                     }
 
                 }

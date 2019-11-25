@@ -1,5 +1,6 @@
 def ci_branches = ['master','abhinav']
 def build_host_address = 'tcp://192.168.99.102:2376'
+def my_branch = "master"
 
 pipeline {
     agent any
@@ -23,13 +24,31 @@ pipeline {
             }
         }
 
+         stage('Build') {
+            steps {
+                script {
+                    if (env.BRANCH_NAME.equals(my_branch))  {
+                        // Check if there are any changes to the package.json file and run the npm commands
+                        def json_package_result = sh(returnStdout: true,script: 'git diff-tree --name-only $GIT_PREVIOUS_COMMIT $GIT_COMMIT')
+                        // This if condition will check whether the json_package_result contain's package.json
+                        // and if the branch is built for the first time.
+                        // Also check for node_modules and hs-srvcommon/node_modules files
+                        if(json_package_result.contains("package.json") || json_package_result.contains("hs-srvcommon") || ! fileExists(file:"node_modules") || ! fileExists(file:"hs-srvcommon/node_modules")) {
+                                sh "npm install"
+                                sh "cd hs-srvcommon && npm install"
+                        }
+                    }
+                }
+            }
+        }
+
         stage('Docker Build') {
             steps {
                 script {
                     // Build the docker image if and only if the branch name is present in ci_branches
                     // and the branch host ip address is present in build_docker_hosts.
                     withDockerServer([uri:build_host_address]) {
-                        docker.script.sh(script: "docker pull hello-world")
+                        docker.script.sh(script: "docker build .")
                     }
 //                         withDockerServer([uri:build_host_address]) {
 //                                sh "ls -l"

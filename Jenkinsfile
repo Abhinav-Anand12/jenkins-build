@@ -30,7 +30,7 @@ pipeline {
                     // and the branch host ip address is present in build_docker_hosts.
 
                         withDockerServer([uri:build_host_address]) {
-                                def image = docker.build("new:${env.BRANCH_NAME}")
+                                def image = docker.build("new:late")
 //                                 image.push()
 
 

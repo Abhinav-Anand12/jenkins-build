@@ -30,10 +30,11 @@ pipeline {
                     // and the branch host ip address is present in build_docker_hosts.
 
                         withDockerServer([uri:build_host_address]) {
-                                def image = docker.build("new:late")
-//                                 image.push()
+                            withDockerRegistry([credentialsId: 'abhinav12']) {
+                                def image = docker.build("abhinav12/myrep:abhi")
+                                image.push()
 
-
+                        }
                     }
                 }
             }

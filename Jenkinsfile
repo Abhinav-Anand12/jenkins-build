@@ -2,7 +2,7 @@
 def my_branch = 'master'
 
 // The default ipAddress where source code build happens
-def build_host_address = 'tcp://172.17.0.1:12375'
+def build_host_address = 'tcp://192.168.99.102:2376'
 
 
 

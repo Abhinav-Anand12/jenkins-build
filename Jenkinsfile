@@ -31,7 +31,7 @@ pipeline {
                     withDockerServer([uri:'tcp://192.168.99.102:2376']) {
                         sh "ls -la"
 //                         docker.script.sh(script: "docker build -t mynewimage ..")
-                        def image = docker.build("mylatestimage ..")
+                        def image = docker.build("mylatestimage .")
                         image.push()
 
 //                         docker.script.sh(script: "sudo docker build -t mynewimage .")

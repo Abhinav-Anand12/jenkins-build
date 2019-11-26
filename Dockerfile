@@ -7,7 +7,7 @@ RUN pip install email-validator --upgrade pip
 
 COPY ./app /app
 
-VOLUME ["/dockjenk"]
+VOLUME ["/jenkbuild"]
 
 EXPOSE 80
 

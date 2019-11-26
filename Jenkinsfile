@@ -23,19 +23,6 @@ pipeline {
                 }
             }
         }
-        stage('SET ENV') {
-            steps {
-                script {
-
-                        // List all the environment variable in the SET ENV stage
-                        def node = tool 'node12'
-                        env.PATH = "${node}/bin:${env.PATH}"
-                        env.NODE_PATH="${node}/lib/node_modules:."
-
-                }
-            }
-        }
-
         stage('Docker Build') {
             steps {
                 script {

@@ -1,5 +1,5 @@
 # jenkins-build
-# API server based on FastAPI
+# A webhook triggered project based on jenkins and docker
 
 This repo contains all the code for writing APIs based on FastAPI/Starlette.
 

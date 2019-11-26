@@ -1,4 +1,4 @@
-// A single branch to be build
+// A single master branch to be build
 def my_branch = 'master'
 
 // The default ipAddress where source code build happens

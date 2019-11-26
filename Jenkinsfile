@@ -36,13 +36,5 @@ pipeline {
         }
 
     }
-//     post {
-//         // Send the build result to slack channel
-//         success {
-//           slackSend (color:'good', message: "Successfully deployed  ${env.JOB_NAME} ")
-//         }
-//         failure {
-//             slackSend (color:'danger', message: "Error in build+deploy ${env.JOB_NAME} ")
-//         }
-//     }
+
 }

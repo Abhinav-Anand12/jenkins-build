@@ -8,4 +8,3 @@ COPY ./app /app
 
 VOLUME ["/dockjenk"]
 
-

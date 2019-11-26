@@ -30,7 +30,7 @@ pipeline {
                     // and the branch host ip address is present in build_docker_hosts.
                     withDockerServer([uri:'tcp://192.168.99.102:2376']) {
                         sh "ls -la"
-                        docker.script.sh(script: "docker build -t mynewimage ..")
+//                         docker.script.sh(script: "docker build -t mynewimage ..")
                         def image = docker.build("mylatestimage ..")
                         image.push()
 

@@ -28,7 +28,7 @@ pipeline {
                 script {
                     // Build the docker image if and only if the branch name is present in ci_branches
                     // and the branch host ip address is present in build_docker_hosts.
-                    withDockerServer([uri:'tcp://192.168.99.104:2376']) {
+                    withDockerServer([uri:'tcp://192.168.99.105:2376']) {
                         sh "ls -la"
 //                         docker.script.sh(script: "docker build -t mynewimage ..")
                         def image = docker.build("sudo mylatestimage")

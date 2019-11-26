@@ -1,5 +1,5 @@
 // A single branch to be build
-def my_branch = 'master'
+def my_branch = 'abhi'
 
 // The default ipAddress where source code build happens
 def build_host_address = 'tcp://172.17.0.1:12375'

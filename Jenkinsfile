@@ -16,10 +16,8 @@ pipeline {
         stage('Checkout') {
             steps {
                 script {
-
                         // Pull the code from bitbucket repository
                         checkout scm
-
                 }
             }
         }
@@ -30,10 +28,8 @@ pipeline {
                     // and the branch host ip address is present in build_docker_hosts.
 
                         withDockerServer([uri:build_host_address]) {
-//                                 docker.script.sh(script: "docker pull registry.hotelsoft.tech/rzr:${env.BRANCH_NAME}")
-                                def image = docker.build("abhinav12/myrep:abhi1")
+                                def image = docker.build("abhinav12/myrep:mytag")
                                 image.push()
-
                     }
                 }
             }

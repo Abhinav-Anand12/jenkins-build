@@ -16,7 +16,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 script {
-                        // Pull the code from bitbucket repository
+                        // Pull the code from github repository
                         checkout scm
                 }
             }

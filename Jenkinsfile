@@ -1,74 +1,66 @@
-def ci_branches = ['master','abhinav']
-def build_host_address = 'tcp://192.168.99.102:2376'
-def my_branch = "master"
+// A single branch to be build
+def my_branch = 'master'
+
+// The default ipAddress where source code build happens
+def build_host_address = 'tcp://172.17.0.1:12375'
+
+
 
 pipeline {
     agent any
+    // Set log rotation, timeout in the options section
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '5'))
+    }
     stages {
         stage('Checkout') {
             steps {
                 script {
-//                     if (ci_branches.contains("master")) {
+                    if (env.BRANCH_NAME.equals(my_branch)) {
+                        // Pull the code from bitbucket repository
                         checkout scm
-//                     }
-
+                    }
                 }
             }
         }
-
-         stage('Update SubModules') {
+        stage('SET ENV') {
             steps {
                 script {
-                    sh "git submodule update --init --recursive && git submodule foreach git checkout master && git submodule foreach git pull"
+                    if (env.BRANCH_NAME.equals(my_branch)) {
+                        // List all the environment variable in the SET ENV stage
+                        def node = tool 'node12'
+                        env.PATH = "${node}/bin:${env.PATH}"
+                        env.NODE_PATH="${node}/lib/node_modules:."
+                    }
                 }
             }
         }
+
         stage('Docker Build') {
             steps {
                 script {
-                    // Build the docker image if and only if the branch name is present in ci_branches
+                    // Build the docker image if and only if the branch name is same as my_branch
                     // and the branch host ip address is present in build_docker_hosts.
-//                     withDockerServer([uri:'tcp://192.168.99.104:2375']) {
-                        sh "ls -la"
-//                         docker.script.sh(script: "docker build -t mynewimage ..")
-                        def image = docker.build("mylatestimage")
-                        image.push()
-
-//                         docker.script.sh(script: "sudo docker build -t mynewimage .")
-//                     }
-
-                }
-//                         withDockerServer([uri:build_host_address]) {
-//                                sh "ls -l"
-//                             docker.script.sh(script: "docker push abhinav12/myrepo:${env.BRANCH_NAME}")
-//                             withDockerRegistry([credentialsId: 'abhinav12']) {
-//                                 def image = docker.build("abhinav12/myrepo:${env.BRANCH_NAME}")
+                    if (env.BRANCH_NAME.equals(my_branch)) {
+                        withDockerServer([uri:build_host_address]) {
+                            withDockerRegistry([credentialsId: 'registryUser', url: "https://registry.hotelsoft.tech/"]) {
+                                def image = docker.build("new:${env.BRANCH_NAME}")
 //                                 image.push()
-//                             }
-//                        }
-//               docker.script.sh(script: "docker build -t abhinav12/myrepo:${env.BRANCH_NAME} .")
-//                         docker.script.sh(script: "docker push abhinav12/myrepo:${env.BRANCH_NAME}")
+                            }
+                        }
+                    }
+                }
             }
         }
-//
-//         stage('Build') {
-//             steps {
-//                 script {
-//                     if (ci_branches.contains(env.BRANCH_NAME)) {
-//                         withDockerServer([uri:build_host_address]) {
-//                             def requirements_file_result = sh(returnStdout: true,script: 'git diff-tree --name-only $GIT_PREVIOUS_COMMIT $GIT_COMMIT')
-//                             if(requirements_file_result.contains("requirements.txt")) {
-//                                 docker.script.sh(script: "docker exec -i app pip install -U -r /app/requirements.txt" )
-//                             }
-// //                                docker.script.sh(script: "docker cp $env.WORKSPACE/. app-production:/app")
-// //                                docker.script.sh(script: "docker exec -i app-production bash -c 'chown -R root:root /app'")
-// //                                docker.script.sh(script: "docker restart app-production")
-//
-//                         }
-//                     }
-//                 }
-//             }
-//         }
-    }
-}
 
+    }
+//     post {
+//         // Send the build result to slack channel
+//         success {
+//           slackSend (color:'good', message: "Successfully deployed  ${env.JOB_NAME} ")
+//         }
+//         failure {
+//             slackSend (color:'danger', message: "Error in build+deploy ${env.JOB_NAME} ")
+//         }
+//     }
+}

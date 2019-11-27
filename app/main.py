@@ -6,5 +6,5 @@ app = FastAPI()
 def read_root():
     return {"Hello": "World"}
 
-print("Some different type of Response From Server")
+print("Some different type of Response from a Server")
 

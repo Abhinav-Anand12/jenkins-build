@@ -9,6 +9,6 @@ COPY ./app /app
 
 VOLUME ["/jenkbuild"]
 
-EXPOSE 8080
+EXPOSE 80
 
 

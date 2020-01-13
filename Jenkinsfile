@@ -1,40 +1,87 @@
-// A single master branch to be build
-def my_branch = 'master'
-
-// The default ipAddress where source code build happens
-def build_host_address = 'tcp://192.168.99.102:2376'
-
-
-
+def ci_branches =  ['S','P']
 pipeline {
-    agent any
-    // Set log rotation, timeout in the options section
-    options {
-        buildDiscarder(logRotator(numToKeepStr: '5'))
+	agent none
+  options {
+      buildDiscarder(logRotator(numToKeepStr: '5'))
+  }
+  environment {
+    GOOGLE_BUCKET = "mylyapp.com"0`
+-  }
+  stages {
+    stage('Checkout') {
+    agent {
+            label 'master'
+	    }
+      steps {
+        script {
+          // Pull the code from bitbucket repository
+          checkout scm
+        }
+      }
     }
-    stages {
-        stage('Checkout') {
+    stage('Build') {
+        agent {
+             label 'master'
+	    }
             steps {
                 script {
-                        // Pull the code from github repository
-                        checkout scm
+                  if (env.BRANCH_NAME.equals('S')) {
+                    sh "hugo -b 'https://mylyapp.tech'"
+                  }
                 }
-            }
+              }
+    }
+     stage('Build') {
+        agent {
+             label 'myagent'
+	    }
+      steps {
+        script {
+          if (env.BRANCH_NAME.equals('P')) {
+                    sh "hugo -b 'https://mylyapp.com'"
+          }
         }
-        stage('Docker Build') {
-            steps {
-                script {
-                    // Build the docker image if and only if the branch name is same as my_branch
-                    // and the branch host ip address is present in build_docker_hosts.
-
-                        withDockerServer([uri:build_host_address]) {
-                                def image = docker.build("abhinav12/myrep:mytag")
-                                image.push()
-                    }
-                }
-            }
-        }
-
+      }
     }
 
+    stage('Deploy') {
+        agent {
+            label 'master'
+	    }
+        steps {
+            script {
+              if (env.BRANCH_NAME.equals('S')) {
+                docker.script.sh(script:"docker cp public ui-integration:/tmp/") //copy public folder from workspace to ui-integration container
+                docker.script.sh(script:"docker exec -i ui-integration bash -c 'rm -rf /usr/share/nginx/html/*'")
+                docker.script.sh(script:"docker exec -i ui-integration bash -c 'mv /tmp/public/* /usr/share/nginx/html'")
+                docker.script.sh(script:"docker exec -i ui-integration bash -c 'chown root:root -R /usr/share/nginx/html/*'")
+              }
+            }
+      }
+    }
+    stage ('Deploy') {
+        agent {
+            label 'myagent'
+	    }
+	    steps {
+            script {
+              if (env.BRANCH_NAME.equals('P')) {
+                docker.script.sh(script:"docker cp public ui-production:/tmp/") //copy public folder from workspace to ui-production container
+                docker.script.sh(script:"docker exec -i ui-production bash -c 'rm -rf /usr/share/nginx/html/*'")
+                docker.script.sh(script:"docker exec -i ui-production bash -c 'mv /tmp/public/* /usr/share/nginx/html'")
+                docker.script.sh(script:"docker exec -i ui-production bash -c 'chown root:root -R /usr/share/nginx/html/*'")
+              }
+            }
+        }
+    }
+  }
+//   post {
+//     // Send the build status to slack channel
+//     success {
+//       slackSend (color:'good', message: "Successfully deployed  ${env.JOB_NAME} ")
+//     }
+//     failure {
+//         slackSend (color:'danger', message: "Error in build+deploy ${env.JOB_NAME} ")
+//     }
+//   }
 }

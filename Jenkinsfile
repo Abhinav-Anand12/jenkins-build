@@ -74,6 +74,7 @@ pipeline {
             }
         }
     }
+
   }
 //   post {
 //     // Send the build status to slack channel
